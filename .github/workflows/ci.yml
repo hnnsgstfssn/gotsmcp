@@ -19,6 +19,8 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
+          cache: true
+          cache-dependency-path: go.sum
       - run: go mod tidy -diff
       - run: go build ./...
       - run: go vet ./...
@@ -38,6 +40,8 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
+          cache: true
+          cache-dependency-path: go.sum
       - name: build binaries
         run: |
           mkdir dist
