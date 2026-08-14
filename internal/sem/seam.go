@@ -5,8 +5,6 @@ import (
 	"path/filepath"
 	"slices"
 	"strings"
-
-	"golang.org/x/tools/go/packages"
 )
 
 // Inbound is one package's references into the selection.
@@ -171,5 +169,3 @@ func (r *SeamReport) Render() string {
 	fmt.Fprintf(&b, "\nverdict: %s\n%s\n", r.Verdict, r.Advice)
 	return b.String()
 }
-
-var _ = packages.Visit

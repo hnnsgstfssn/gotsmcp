@@ -148,13 +148,6 @@ func (s *Server) deps(ctx context.Context, _ *mcp.CallToolRequest, in DepsInput)
 	return nil, res, nil
 }
 
-func cmpOrString(a, b string) string {
-	if strings.TrimSpace(a) != "" {
-		return a
-	}
-	return b
-}
-
 func moveSummary(mv *sem.Move, req sem.MoveRequest) string {
 	what := mv.Symbol.Kind + " " + mv.Symbol.Name
 	if n := len(req.Symbols) + len(req.Files); n > 1 || len(req.Files) > 0 {
@@ -296,7 +289,7 @@ func (s *Server) move(ctx context.Context, _ *mcp.CallToolRequest, in MoveInput)
 	req := sem.MoveRequest{
 		Symbols:     in.Symbols,
 		Files:       in.Files,
-		To:          cmpOrString(in.To, in.ToFile),
+		To:          sem.CmpOrString(in.To, in.ToFile),
 		IncludeDeps: in.IncludeDeps,
 	}
 	if in.Symbol != "" {

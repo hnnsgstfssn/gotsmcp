@@ -285,8 +285,8 @@ func (s *Snapshot) renderParams(decl *ast.FuncDecl, params []ParamChange) (strin
 					ErrBadSignature, i, idx)
 			}
 			f := oldFields[idx]
-			name := cmpOrString(p.Name, f.name)
-			typ := cmpOrString(p.Type, f.typ)
+			name := CmpOrString(p.Name, f.name)
+			typ := CmpOrString(p.Type, f.typ)
 			parts = append(parts, strings.TrimSpace(name+" "+typ))
 			continue
 		}
@@ -458,7 +458,8 @@ func (s *Snapshot) pkgQualifier() types.Qualifier {
 	return func(p *types.Package) string { return p.Name() }
 }
 
-func cmpOrString(a, b string) string {
+// CmpOrString returns a if it is non-blank, otherwise b.
+func CmpOrString(a, b string) string {
 	if strings.TrimSpace(a) != "" {
 		return a
 	}
