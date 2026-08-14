@@ -25,11 +25,6 @@ type Move struct {
 	Requalified int            `json:"requalified_references"`
 }
 
-// MoveDecl relocates a single declaration. It is MoveDecls with one symbol.
-func (s *Snapshot) MoveDecl(obj types.Object, destFile string) (*Move, error) {
-	return s.MoveDecls(MoveRequest{Symbols: []string{s.Describe(obj).Position}, To: destFile})
-}
-
 // declFor locates the top-level declaration that introduces obj.
 func (s *Snapshot) declFor(obj types.Object) (ast.Decl, *ast.File, *packages.Package, error) {
 	var (

@@ -9,8 +9,6 @@ import (
 	"strings"
 
 	"github.com/hnnsgstfssn/treesitter-mcp/internal/rewrite"
-
-	"golang.org/x/tools/go/packages"
 )
 
 // MoveDecls relocates a set of declarations, in the same package or a different
@@ -255,5 +253,3 @@ func (s *Snapshot) checkSetMovable(ms *moveSet, dest destination) error {
 	}
 	return nil
 }
-
-var _ = packages.Visit
