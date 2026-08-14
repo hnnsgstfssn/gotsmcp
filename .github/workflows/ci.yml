@@ -16,3 +16,35 @@ jobs:
       - run: go vet ./...
       - run: go test -race ./...
 
+  # Master is the release: every green push publishes a GitHub release named
+  # for its commit, with a binary for each platform attached. No versioning
+  # scheme beyond the commit itself.
+  release:
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: build binaries
+        run: |
+          mkdir dist
+          for platform in darwin/amd64 darwin/arm64 linux/amd64 linux/arm64 windows/amd64 windows/arm64; do
+            os=${platform%/*}
+            arch=${platform#*/}
+            ext=""
+            [ "$os" = "windows" ] && ext=".exe"
+            GOOS=$os GOARCH=$arch go build -o "dist/gotsmcp-${os}-${arch}${ext}" ./cmd/gotsmcp
+          done
+      - name: publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          sha=$(git rev-parse --short HEAD)
+          gh release delete "$sha" --yes --cleanup-tag || true
+          gh release create "$sha" dist/* --title "$sha" --target "$GITHUB_SHA" --generate-notes
+
